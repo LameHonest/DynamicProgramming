@@ -1,43 +1,38 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include <algorithm>
 #include <fstream>
+#include "stdio.h"
+#include <algorithm>
+#include <vector>
+#include <iostream>
 
 using namespace std;
 
-int maxl(int i, int* mas, int n) {
-	if (i > n - 3)
-		return 0;
-	return mas[i + 1] - mas[i] + max(maxl(i + 2, mas, n), maxl(i + 3, mas, n));
+int len(vector<int> coord, int index) {
+    if (index == 0)
+        return 100000;
+    else if (index == 1)
+        return 0;
+    else if (index == 2)
+        return coord[1] - coord[0];
+    else if (index == 3)
+        return coord[2] - coord[0];
+    if (index > 3)
+    {
+        return min(len(coord, index - 1), len(coord, index - 2)) + coord[index-1] - coord[index - 2];
+    }
 }
 
-void selectionSort(int data[], int lenD)
+int main()
 {
-	int j = 0;
-	int tmp = 0;
-	for (int i = 0; i < lenD; i++) {
-		j = i;
-		for (int k = i; k < lenD; k++) {
-			if (data[j] > data[k]) {
-				j = k;
-			}
-		}
-		tmp = data[i];
-		data[i] = data[j];
-		data[j] = tmp;
-	}
-}
-
-int main(int argc, char* argv[]) {
-	ifstream ifstr("input.txt");
-	ofstream ofstr("output.txt");
-	int n;
-	ifstr >> n;
-	int* mas = new int[n];
-	for (int i = 0; i < n; i++)
-		ifstr >> mas[i];
-	selectionSort(mas, n);
-	int m = max(maxl(1, mas, n), maxl(2, mas, n));
-	cout << mas[n - 1] - mas[0] - m;
+    ifstream ifst("input.txt");
+    ofstream ofst("output.txt");
+    int n, buf;
+    ifst >> n;
+    vector<int> coord;
+    for (int i = 0; i < n; ++i) {
+        ifst >> buf;
+        coord.push_back(buf);
+    }
+    sort(coord.begin(), coord.end());
+    ofst << len(coord, n);
+    return 0;
 }
